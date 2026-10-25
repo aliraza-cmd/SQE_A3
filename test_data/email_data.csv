@@ -1,0 +1,8 @@
+test_id,email,expected,technique
+E-01,ali@gmail.com,valid,ECP
+E-02,invalid,invalid,ECP
+E-03,user@example.org,valid,ECP
+E-04,@gmail.com,invalid,BVA
+E-05,student.name+work@fast.edu.pk,valid,ECP
+E-06,user@domain..com,invalid,BVA
+E-07,a@b.c,invalid,BVA

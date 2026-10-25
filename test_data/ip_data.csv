@@ -1,0 +1,7 @@
+test_id,function,input,expected,technique
+I-01,ipv4,192.168.1.1,TRUE,ECP
+I-02,ipv4,256.1.1.1,FALSE,BVA
+I-03,ipv4,1.2.3,FALSE,ECP
+I-04,ipv6,::1,TRUE,ECP
+I-05,ipv6,1:2:3:4:5:6:7:8:9,FALSE,BVA
+I-06,ipv6,gggg::1,FALSE,ECP
