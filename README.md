@@ -1,56 +1,190 @@
-# validators - Python Data Validation for Humans™
+# Assignment 3: Build Unit Test Automation Solution
 
-[![PyCQA][pycqa-badge]][pycqa-link] [![SAST][sast-badge]][sast-link] [![Docs][docs-badge]][docs-link] [![Version][vs-badge]][vs-link] [![Downloads][dw-badge]][dw-link]
-
-<!-- [![Package][package-badge]][package-link] -->
-
-Python has all kinds of data validation tools, but every one of them seems to
-require defining a schema or form. I wanted to create a simple validation
-library where validating a simple value does not require defining a form or a
-schema.
-
-```shell
-pip install validators
-```
-
-Then,
-
-```python
->>> import validators
->>>
->>> validators.email('someone@example.com')
-True
-```
-
-## Resources
-
-<!-- Backup documentation URL :  https://nandgator.github.io/pyvalidators/ -->
-<!-- Original documentation URL :  https://python-validators.github.io/validators/ -->
-
-- [Documentation](https://nandgator.github.io/pyvalidators)
-- [Bugtracker](https://github.com/python-validators/validators/issues)
-- [Security](https://github.com/python-validators/validators/blob/master/SECURITY.md)
-- [Code](https://github.com/python-validators/validators/)
-
-> The documentation is published through GitHub Pages on the maintainer's [fork](https://github.com/nandgator/pyvalidators), because the maintainer has only contributor access to this repository and cannot enable Pages for it.
-
-<!-- Original docs URL will be restored, once properly versioned docs are ready. -->
+**Course:** SE-3002 Software Quality Engineering  
+**Target Open-Source Application:** [`validators`](https://github.com/python-validators/validators) (Python)  
+**Submission Repository:** [https://github.com/aliraza-cmd/SQE_A3.git](https://github.com/aliraza-cmd/SQE_A3.git)  
 
 ---
 
-> **_Python 3.11 [reaches EOL in](https://endoflife.date/python) October 2027._**
+## 1. Group Member Allocation & Task Distribution
 
-<!-- Links -->
-[sast-badge]: https://github.com/python-validators/validators/actions/workflows/sast.yaml/badge.svg
-[sast-link]: https://github.com/python-validators/validators/actions/workflows/sast.yaml
-[pycqa-badge]: https://github.com/python-validators/validators/actions/workflows/pycqa.yaml/badge.svg
-[pycqa-link]: https://github.com/python-validators/validators/actions/workflows/pycqa.yaml
-[docs-badge]: https://github.com/nandgator/pyvalidators/actions/workflows/pages/pages-build-deployment/badge.svg
-[docs-link]: https://github.com/nandgator/pyvalidators/actions/workflows/pages/pages-build-deployment
-[vs-badge]: https://img.shields.io/pypi/v/validators?logo=pypi&logoColor=white&label=version&color=blue
-[vs-link]: https://pypi.python.org/pypi/validators/
-[dw-badge]: https://img.shields.io/pypi/dm/validators?logo=pypi&logoColor=white&color=blue
-[dw-link]: https://pypi.python.org/pypi/validators/
+| Member Name | Role | Assigned Modules & Tasks |
+|:---|:---|:---|
+| **Ali Raza** | Lead QA Engineer & Automation Architect | **Module 1** (`validators.email`), **Module 3** (`validators.url`), **Task 4** (Test Suite Configuration, Parallel Execution, Ordering, Markers) |
+| **Ali Asif** | Test Automation Engineer | **Module 2** (`validators.ip_address` - IPv4 & IPv6), **Task 3** (External CSV Data-Driven Testing for Email & IP, Excel Test Specification) |
 
-<!-- [package-badge]: https://github.com/python-validators/validators/actions/workflows/package.yaml/badge.svg
-[package-link]: https://github.com/python-validators/validators/actions/workflows/package.yaml -->
+---
+
+## 2. Deliverables & Required Reports Format Overview
+
+According to the assignment specification and evaluation rubric, all deliverables and reports are structured in the following formats:
+
+| Deliverable | Purpose | Required Format | Repository Location |
+|:---|:---|:---:|:---|
+| **Test Cases in Excel Sheet** *(Task 3)* | Full test matrix with Test IDs, inputs, expected outputs, techniques, and execution status. | **Excel Spreadsheet (`.xlsx`)** | [`documents/Test_Cases_Specification.xlsx`](documents/Test_Cases_Specification.xlsx) |
+| **External CSV Test Data** *(Task 3)* | External datasets consumed dynamically by data-driven test cases. | **Comma-Separated Values (`.csv`)** | [`test_data/email_data.csv`](test_data/email_data.csv)<br>[`test_data/ip_data.csv`](test_data/ip_data.csv) |
+| **ECP & BVA Design Notes** *(Task 2)* | Comprehensive testing design notes documenting Equivalence Classes, Boundary Values, and input partitions. | **Markdown (`.md`)** *(can also be printed to PDF)* | [`documents/ECP_BVA_Test_Design_Notes.md`](documents/ECP_BVA_Test_Design_Notes.md) |
+| **Summary Report** *(Rubric Item)* | End-to-end report summarizing testing achievements, test metrics, and rubric compliance before due date. | **Markdown (`.md`) / PDF** | [`documents/Summary_Report.md`](documents/Summary_Report.md) |
+| **Execution & Setup Guide** *(Task 4)* | Instructions for setting up environment, parallel execution, test suites, and markers. | **Markdown (`.md`)** | [`documents/Test_Execution_Guide.md`](documents/Test_Execution_Guide.md) |
+| **Setup Video Demonstration** *(Task 1)* | Video demonstrating local environment setup and test execution. | **Video (`.mp4`) / Link** | [`documents/setup_demo.mp4`](documents/) *(or Google Drive link in docs)* |
+
+---
+
+## 3. Tasks Implementation Summary
+
+### Task 1: Environment Setup
+- **Project Selected:** `validators` (v0.36.0) - A Python data validation library for human readability.
+- **Local Development Environment:**
+  - Python virtual environment: `.venv/`
+  - Core dependencies: `pytest`, `pytest-xdist` (parallelism), `pytest-order` (ordering), `openpyxl` (Excel processing).
+  - Configuration file: `pytest.ini` with `pythonpath = src`.
+
+---
+
+### Task 2: Automated Unit Test Cases (3 Distinct Modules)
+
+We identified and developed comprehensive automated unit test cases for **3 distinct modules**, applying **Equivalence Class Partitioning (ECP)** and **Boundary Value Analysis (BVA)**:
+
+1. **Module 1: Email Validation (`validators.email`)**
+   - **Test File:** [`test_cases/test_email_validation.py`](test_cases/test_email_validation.py)
+   - **ECP Partitioning:** Valid standard emails, alphanumeric, subdomains, plus-tagging (`+`), numeric usernames, hyphens; Invalid addresses missing `@`, missing local-part, missing domain, consecutive dots, whitespace, and duplicate `@`.
+   - **BVA Boundaries:** Local-part length maximum boundary of 64 characters (RFC 5321), local-part length 65 characters (upper bound + 1, invalid), 1-character local-part (min valid), 0-character local part (invalid), empty string.
+   - **Total Tests:** 19 test cases (All passing).
+
+2. **Module 2: IP Address Validation (`validators.ip_address`)**
+   - **Test File:** [`test_cases/test_ip_validation.py`](test_cases/test_ip_validation.py)
+   - **IPv4 ECP & BVA:** Network Classes A, B, C; loopback (`127.0.0.1`); public DNS; octet boundaries `0` and `255`; off-boundary `256` and negative octet `-1`; structural 3-octet and 5-octet boundaries; non-numeric inputs.
+   - **IPv6 ECP & BVA:** Compressed loopback (`::1`), uncompressed 8-hextets, link-local (`fe80::1`), IPv4-mapped IPv6; boundary hextet `0xFFFF`, hextet overflow `0x10000`, 9-hextet boundary violation, non-hex character (`g`), double compression violation.
+   - **Total Tests:** 23 test cases (All passing).
+
+3. **Module 3: URL Validation (`validators.url`)**
+   - **Test File:** [`test_cases/test_url_validation.py`](test_cases/test_url_validation.py)
+   - **ECP Partitioning:** Valid `https://`, `http://`, `ftp://`, URLs with ports, multi-level path + query strings (`?a=1&b=2`), and fragment anchors (`#section`); Invalid missing scheme, unsupported scheme typos, missing hostname, whitespace in authority, dangerous JavaScript pseudo-schemes.
+   - **BVA Boundaries:** Minimum second-level domain length (`http://a.io`), TCP port lower bound `1`, TCP port upper bound `65535`, port overflow `65536` (invalid), port `0` (invalid), empty string.
+   - **Total Tests:** 18 test cases (All passing).
+
+---
+
+### Task 3: Excel Sheet & External CSV Data-Driven Testing
+
+1. **Excel Test Specification:**
+   - Saved as [`documents/Test_Cases_Specification.xlsx`](documents/Test_Cases_Specification.xlsx).
+   - Formatted into distinct sheets: `Email Validation`, `IP Address Validation`, `URL Validation`, and `CSV External Data Tests` containing Test IDs, module names, inputs, expected outputs, techniques, and execution status (`PASS`).
+
+2. **External CSV Data Consumption:**
+   - [`test_data/email_data.csv`](test_data/email_data.csv): Consumed by [`test_cases/test_csv_email.py`](test_cases/test_csv_email.py) (7 data-driven tests).
+   - [`test_data/ip_data.csv`](test_data/ip_data.csv): Consumed by [`test_cases/test_csv_ip.py`](test_cases/test_csv_ip.py) using dynamic dispatch for `validators.ipv4` and `validators.ipv6` (6 data-driven tests).
+
+---
+
+### Task 4: Configuration, Parallelism, Suites & Ordering
+
+- **Configuration:** [`pytest.ini`](pytest.ini) defines `pythonpath = src`, test discovery paths, and strict markers.
+- **Parallel Execution:** Configured using `pytest-xdist` (`pytest -n auto`).
+- **Test Suites / Groups (Markers):**
+  - `email`: All email validation tests.
+  - `ip`: All IPv4 & IPv6 validation tests.
+  - `url`: All URL validation tests.
+  - `csv`: All data-driven external CSV tests.
+  - `ecp`: Equivalence Class Partitioning tests.
+  - `bva`: Boundary Value Analysis tests.
+- **Execution Ordering (`pytest-order`):**
+  - Order 1: `test_cases/test_email_validation.py`
+  - Order 2: `test_cases/test_ip_validation.py`
+  - Order 3: `test_cases/test_url_validation.py`
+  - Order 4: `test_cases/test_csv_email.py`
+  - Order 5: `test_cases/test_csv_ip.py`
+
+---
+
+## 4. How to Run the Test Automation Solution
+
+Make sure you are in the project root directory and the virtual environment is activated:
+
+```powershell
+# Activate virtual environment (if not already active)
+.\.venv\Scripts\Activate.ps1
+```
+
+### 1. Run the Entire Test Suite (Default Order 1 -> 5)
+```powershell
+pytest -v
+```
+
+### 2. Run Test Cases in Parallel Across CPU Cores (Task 4)
+```powershell
+# Automatically detect CPU cores:
+pytest -n auto
+
+# Or specify worker processes explicitly:
+pytest -n 4
+```
+
+### 3. Run Specific Test Suites (Task 4)
+```powershell
+pytest -m email       # Run only Email validation suite
+pytest -m ip          # Run only IP address suite (IPv4 & IPv6)
+pytest -m url         # Run only URL validation suite
+pytest -m csv         # Run only external CSV data-driven suite
+```
+
+### 4. Run by Testing Technique (Task 2)
+```powershell
+pytest -m ecp         # Run all Equivalence Class Partitioning tests
+pytest -m bva         # Run all Boundary Value Analysis tests
+```
+
+### 5. Run External CSV Data-Driven Tests Only (Task 3)
+```powershell
+pytest test_cases/test_csv_email.py -v
+pytest test_cases/test_csv_ip.py -v
+```
+
+---
+
+## 5. Test Execution Results
+
+```
+============================= test session starts =============================
+platform win32 -- Python 3.14.8, pytest-9.1.1
+plugins: order-1.5.0, xdist-3.8.0
+collected 73 items
+
+test_cases/test_email_validation.py ...................                  [ 26%]
+test_cases/test_ip_validation.py .......................                 [ 57%]
+test_cases/test_url_validation.py ..................                     [ 82%]
+test_cases/test_csv_email.py .......                                     [ 91%]
+test_cases/test_csv_ip.py ......                                         [100%]
+
+============================= 73 passed in 0.30s ==============================
+```
+
+- **Total Test Cases:** 73
+- **Passed:** 73 (100%)
+- **Failed:** 0 (0%)
+- **Errors / Skipped:** 0
+
+---
+
+## 6. Repository Structure
+
+```
+validators/
+├── documents/
+│   ├── ECP_BVA_Test_Design_Notes.md        # Task 2 ECP and BVA design notes
+│   ├── Test_Execution_Guide.md             # Task 4 execution instructions & guides
+│   ├── Summary_Report.md                   # Rubric summary report
+│   └── Test_Cases_Specification.xlsx       # Task 3 Excel test matrix
+├── test_cases/
+│   ├── test_email_validation.py            # Task 2: Module 1 Email tests (ECP & BVA)
+│   ├── test_ip_validation.py               # Task 2: Module 2 IP tests (ECP & BVA)
+│   ├── test_url_validation.py              # Task 2: Module 3 URL tests (ECP & BVA)
+│   ├── test_csv_email.py                   # Task 3: Email CSV data-driven tests
+│   └── test_csv_ip.py                      # Task 3: IP CSV data-driven tests
+├── test_data/
+│   ├── email_data.csv                      # External CSV data for email validation
+│   └── ip_data.csv                         # External CSV data for IP validation
+├── src/validators/                         # Target application source code under test
+├── pytest.ini                              # Pytest configuration, suites, and markers
+└── README.md                               # Project documentation & evaluation guide
+```
