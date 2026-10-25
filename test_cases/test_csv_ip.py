@@ -25,7 +25,7 @@ IP_RECORDS = load_ip_test_data()
 @pytest.mark.ip
 @pytest.mark.csv
 @pytest.mark.regression
-@pytest.mark.order(5)
+@pytest.mark.order(4)
 @pytest.mark.parametrize(
     "row",
     IP_RECORDS,

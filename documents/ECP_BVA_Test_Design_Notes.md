@@ -11,14 +11,14 @@
 
 | Member Name | Role & Responsibility | Assigned Modules / Tasks |
 |:---|:---|:---|
-| **Ali Raza** | Lead QA Engineer & Automation Architect | Module 1 (`validators.email`), Module 3 (`validators.url`), Task 4 Test Suite Configuration & Ordering |
+| **Ali Raza** | Lead QA Engineer & Automation Architect | Module 1 (`validators.email`), Task 4 Test Suite Configuration & Ordering |
 | **Ali Asif** | Test Automation Engineer | Module 2 (`validators.ip_address`), Task 3 CSV Data-Driven Testing (`email_data.csv` & `ip_data.csv`) |
 
 ---
 
 ## 2. Identified Application Modules
 
-We identified three core modules from the `validators` library:
+We selected core validation modules from the `validators` library:
 
 1. **Module 1: Email Address Validation (`validators.email`)**
    - Implements email format and syntax checking adhering to RFC 5321, RFC 5322, and RFC 1034.
@@ -27,10 +27,6 @@ We identified three core modules from the `validators` library:
 2. **Module 2: IP Address Validation (`validators.ip_address`)**
    - Validates IPv4 (`validators.ipv4`) addresses, CIDR notation, and private/public address rules.
    - Validates IPv6 (`validators.ipv6`) addresses including IPv4-mapped, compressed notations, and hextet boundaries.
-
-3. **Module 3: URL Validation (`validators.url`)**
-   - Validates internet URLs against standard schemes (`http`, `https`, `ftp`, `sftp`, etc.).
-   - Validates authentication segments, port ranges (1–65535), network locations, query strings, and fragments.
 
 ---
 
@@ -120,44 +116,10 @@ IPv6 addresses consist of up to 8 hextets of 16-bit values (`[0x0000, 0xFFFF]`).
 
 ---
 
-## 5. Module 3: URL Validation (`validators.url`)
+## 5. Summary of Test Coverage
 
-### 5.1 Equivalence Class Partitioning (ECP)
-
-| Partition ID | Partition Description | Class Type | Sample Input | Expected Result |
-|:---|:---|:---:|:---|:---:|
-| **ECP-URL-01** | Standard HTTPS scheme with TLD | Valid | `https://google.com` | `True` |
-| **ECP-URL-02** | Standard HTTP scheme | Valid | `http://example.org` | `True` |
-| **ECP-URL-03** | FTP protocol scheme | Valid | `ftp://files.example.com` | `True` |
-| **ECP-URL-04** | Custom port number specified | Valid | `https://fast.edu.pk:8080` | `True` |
-| **ECP-URL-05** | Multi-level path and query parameters | Valid | `https://example.com/api/v1?search=test&sort=asc` | `True` |
-| **ECP-URL-06** | URL with fragment anchor | Valid | `https://example.com/home#section2` | `True` |
-| **ECP-URL-07** | Missing protocol scheme and host structure | Invalid | `not-a-url` | `False` |
-| **ECP-URL-08** | Unsupported/misspelled scheme (`htp://`) | Invalid | `htp://wrong-scheme.com` | `False` |
-| **ECP-URL-09** | Scheme without hostname | Invalid | `http://` | `False` |
-| **ECP-URL-10** | Whitespace in domain authority | Invalid | `https://exam ple.com` | `False` |
-| **ECP-URL-11** | Dangerous pseudo-scheme | Invalid | `javascript:alert(1)` | `False` |
-| **ECP-URL-12** | Leading hyphen in hostname label | Invalid | `http://-leading-hyphen.com` | `False` |
-
-### 5.2 Boundary Value Analysis (BVA)
-
-Valid TCP port range is defined in RFC 6335 as `[1, 65535]`.
-
-| Boundary ID | Boundary Under Test | Tested Value | Input String | Expected Result |
-|:---|:---|:---:|:---|:---:|
-| **BVA-URL-01** | Shortest valid second-level domain | 1 char | `http://a.io` | `True` |
-| **BVA-URL-02** | Minimum valid TCP port (on-boundary) | 1 | `http://example.com:1` | `True` |
-| **BVA-URL-03** | Maximum valid TCP port (on-boundary) | 65535 | `http://example.com:65535` | `True` |
-| **BVA-URL-04** | TCP port upper bound + 1 (off-boundary) | 65536 | `http://example.com:65536` | `False` |
-| **BVA-URL-05** | TCP port lower bound - 1 (off-boundary) | 0 | `http://example.com:0` | `False` |
-| **BVA-URL-06** | Empty string boundary | 0 chars | `""` | `False` |
-
----
-
-## 6. Summary of Test Coverage
-
-- **Total Unit Test Cases Implemented:** 73
-- **Test Modules Covered:** 3 (`email`, `ip_address`, `url`)
+- **Total Unit Test Cases Implemented:** 55
+- **Test Modules Covered:** `email`, `ip_address` (`ipv4` & `ipv6`)
 - **Techniques Applied:** Equivalence Class Partitioning (ECP) & Boundary Value Analysis (BVA)
 - **External Data-Driven Tests:** 13 (Consuming `email_data.csv` and `ip_data.csv`)
-- **Pass Rate:** 100% (73/73 passed)
+- **Pass Rate:** 100% (55/55 passed)

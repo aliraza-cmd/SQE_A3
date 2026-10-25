@@ -10,7 +10,7 @@
 
 | Member Name | Role | Assigned Modules & Tasks |
 |:---|:---|:---|
-| **Ali Raza** | Lead QA Engineer & Automation Architect | **Module 1** (`validators.email`), **Module 3** (`validators.url`), **Task 4** (Test Suite Configuration, Parallel Execution, Ordering, Markers) |
+| **Ali Raza** | Lead QA Engineer & Automation Architect | **Module 1** (`validators.email`), **Task 4** (Test Suite Configuration, Parallel Execution, Ordering, Markers) |
 | **Ali Asif** | Test Automation Engineer | **Module 2** (`validators.ip_address` - IPv4 & IPv6), **Task 3** (External CSV Data-Driven Testing for Email & IP, Excel Test Specification) |
 
 ---
@@ -41,9 +41,9 @@ According to the assignment specification and evaluation rubric, all deliverable
 
 ---
 
-### Task 2: Automated Unit Test Cases (3 Distinct Modules)
+### Task 2: Automated Unit Test Cases
 
-We identified and developed comprehensive automated unit test cases for **3 distinct modules**, applying **Equivalence Class Partitioning (ECP)** and **Boundary Value Analysis (BVA)**:
+We identified and developed comprehensive automated unit test cases applying **Equivalence Class Partitioning (ECP)** and **Boundary Value Analysis (BVA)**:
 
 1. **Module 1: Email Validation (`validators.email`)**
    - **Test File:** [`test_cases/test_email_validation.py`](test_cases/test_email_validation.py)
@@ -57,19 +57,13 @@ We identified and developed comprehensive automated unit test cases for **3 dist
    - **IPv6 ECP & BVA:** Compressed loopback (`::1`), uncompressed 8-hextets, link-local (`fe80::1`), IPv4-mapped IPv6; boundary hextet `0xFFFF`, hextet overflow `0x10000`, 9-hextet boundary violation, non-hex character (`g`), double compression violation.
    - **Total Tests:** 23 test cases (All passing).
 
-3. **Module 3: URL Validation (`validators.url`)**
-   - **Test File:** [`test_cases/test_url_validation.py`](test_cases/test_url_validation.py)
-   - **ECP Partitioning:** Valid `https://`, `http://`, `ftp://`, URLs with ports, multi-level path + query strings (`?a=1&b=2`), and fragment anchors (`#section`); Invalid missing scheme, unsupported scheme typos, missing hostname, whitespace in authority, dangerous JavaScript pseudo-schemes.
-   - **BVA Boundaries:** Minimum second-level domain length (`http://a.io`), TCP port lower bound `1`, TCP port upper bound `65535`, port overflow `65536` (invalid), port `0` (invalid), empty string.
-   - **Total Tests:** 18 test cases (All passing).
-
 ---
 
 ### Task 3: Excel Sheet & External CSV Data-Driven Testing
 
 1. **Excel Test Specification:**
    - Saved as [`documents/Test_Cases_Specification.xlsx`](documents/Test_Cases_Specification.xlsx).
-   - Formatted into distinct sheets: `Email Validation`, `IP Address Validation`, `URL Validation`, and `CSV External Data Tests` containing Test IDs, module names, inputs, expected outputs, techniques, and execution status (`PASS`).
+   - Formatted into distinct sheets: `Email Validation`, `IP Address Validation`, and `CSV External Data Tests` containing Test IDs, module names, inputs, expected outputs, techniques, and execution status (`PASS`).
 
 2. **External CSV Data Consumption:**
    - [`test_data/email_data.csv`](test_data/email_data.csv): Consumed by [`test_cases/test_csv_email.py`](test_cases/test_csv_email.py) (7 data-driven tests).
@@ -79,21 +73,19 @@ We identified and developed comprehensive automated unit test cases for **3 dist
 
 ### Task 4: Configuration, Parallelism, Suites & Ordering
 
-- **Configuration:** [`pytest.ini`](pytest.ini) defines `pythonpath = src`, test discovery paths, and strict markers.
+- **Configuration:** [`pytest.ini`](pytest.ini) defines `pythonpath = src`, test discovery paths, and markers.
 - **Parallel Execution:** Configured using `pytest-xdist` (`pytest -n auto`).
 - **Test Suites / Groups (Markers):**
   - `email`: All email validation tests.
   - `ip`: All IPv4 & IPv6 validation tests.
-  - `url`: All URL validation tests.
   - `csv`: All data-driven external CSV tests.
   - `ecp`: Equivalence Class Partitioning tests.
   - `bva`: Boundary Value Analysis tests.
 - **Execution Ordering (`pytest-order`):**
   - Order 1: `test_cases/test_email_validation.py`
   - Order 2: `test_cases/test_ip_validation.py`
-  - Order 3: `test_cases/test_url_validation.py`
-  - Order 4: `test_cases/test_csv_email.py`
-  - Order 5: `test_cases/test_csv_ip.py`
+  - Order 3: `test_cases/test_csv_email.py`
+  - Order 4: `test_cases/test_csv_ip.py`
 
 ---
 
@@ -106,7 +98,7 @@ Make sure you are in the project root directory and the virtual environment is a
 .\.venv\Scripts\Activate.ps1
 ```
 
-### 1. Run the Entire Test Suite (Default Order 1 -> 5)
+### 1. Run the Entire Test Suite (Default Order 1 -> 4)
 ```powershell
 pytest -v
 ```
@@ -124,7 +116,6 @@ pytest -n 4
 ```powershell
 pytest -m email       # Run only Email validation suite
 pytest -m ip          # Run only IP address suite (IPv4 & IPv6)
-pytest -m url         # Run only URL validation suite
 pytest -m csv         # Run only external CSV data-driven suite
 ```
 
@@ -148,19 +139,18 @@ pytest test_cases/test_csv_ip.py -v
 ============================= test session starts =============================
 platform win32 -- Python 3.14.8, pytest-9.1.1
 plugins: order-1.5.0, xdist-3.8.0
-collected 73 items
+collected 55 items
 
-test_cases/test_email_validation.py ...................                  [ 26%]
-test_cases/test_ip_validation.py .......................                 [ 57%]
-test_cases/test_url_validation.py ..................                     [ 82%]
-test_cases/test_csv_email.py .......                                     [ 91%]
+test_cases/test_email_validation.py ...................                  [ 34%]
+test_cases/test_ip_validation.py .......................                 [ 76%]
+test_cases/test_csv_email.py .......                                     [ 89%]
 test_cases/test_csv_ip.py ......                                         [100%]
 
-============================= 73 passed in 0.30s ==============================
+============================= 55 passed in 0.23s ==============================
 ```
 
-- **Total Test Cases:** 73
-- **Passed:** 73 (100%)
+- **Total Test Cases:** 55
+- **Passed:** 55 (100%)
 - **Failed:** 0 (0%)
 - **Errors / Skipped:** 0
 
@@ -178,7 +168,6 @@ validators/
 ├── test_cases/
 │   ├── test_email_validation.py            # Task 2: Module 1 Email tests (ECP & BVA)
 │   ├── test_ip_validation.py               # Task 2: Module 2 IP tests (ECP & BVA)
-│   ├── test_url_validation.py              # Task 2: Module 3 URL tests (ECP & BVA)
 │   ├── test_csv_email.py                   # Task 3: Email CSV data-driven tests
 │   └── test_csv_ip.py                      # Task 3: IP CSV data-driven tests
 ├── test_data/

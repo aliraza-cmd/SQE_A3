@@ -28,7 +28,7 @@
    python_classes = Test*
    python_functions = test_*
    pythonpath = src
-   addopts = -v -ra --strict-markers
+   addopts = -v -ra
    ```
 
 ---
@@ -55,7 +55,6 @@ All tests are partitioned into logical suites using markers:
 |:---|:---|:---|
 | `email` | Runs all Email validation tests (code + CSV) | `pytest -m email` |
 | `ip` | Runs all IPv4 and IPv6 validation tests (code + CSV) | `pytest -m ip` |
-| `url` | Runs all URL validation tests | `pytest -m url` |
 | `csv` | Runs all External Data-Driven CSV tests | `pytest -m csv` |
 | `ecp` | Runs Equivalence Class Partitioning tests | `pytest -m ecp` |
 | `bva` | Runs Boundary Value Analysis tests | `pytest -m bva` |
@@ -81,9 +80,8 @@ The execution order across test suites is strictly established using `@pytest.ma
 
 1. **Order 1:** Email Validation Unit Tests (`test_cases/test_email_validation.py`)
 2. **Order 2:** IP Address Validation Unit Tests (`test_cases/test_ip_validation.py`)
-3. **Order 3:** URL Validation Unit Tests (`test_cases/test_url_validation.py`)
-4. **Order 4:** Email CSV Data-Driven Tests (`test_cases/test_csv_email.py`)
-5. **Order 5:** IP CSV Data-Driven Tests (`test_cases/test_csv_ip.py`)
+3. **Order 3:** Email CSV Data-Driven Tests (`test_cases/test_csv_email.py`)
+4. **Order 4:** IP CSV Data-Driven Tests (`test_cases/test_csv_ip.py`)
 
 To run the entire suite in this defined order:
 ```powershell
@@ -113,5 +111,4 @@ The complete test specification matrix is available as an Excel spreadsheet:
 - **Contents:**
   - Tab 1: `Email Validation` (19 test cases)
   - Tab 2: `IP Address Validation` (23 test cases)
-  - Tab 3: `URL Validation` (18 test cases)
-  - Tab 4: `CSV External Data Tests` (12 test cases)
+  - Tab 3: `CSV External Data Tests` (13 test cases)

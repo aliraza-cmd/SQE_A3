@@ -13,7 +13,6 @@ CSV_FILE = Path(__file__).resolve().parent.parent / "test_data" / "email_data.cs
 
 
 def load_email_test_data():
-    """Load test cases dynamically from email_data.csv."""
     with open(CSV_FILE, mode="r", encoding="utf-8", newline="") as file:
         reader = csv.DictReader(file)
         return list(reader)
@@ -25,14 +24,13 @@ EMAIL_RECORDS = load_email_test_data()
 @pytest.mark.email
 @pytest.mark.csv
 @pytest.mark.regression
-@pytest.mark.order(4)
+@pytest.mark.order(3)
 @pytest.mark.parametrize(
     "row",
     EMAIL_RECORDS,
     ids=[f"{r.get('test_id', 'E')}_{r.get('technique', 'CSV')}_{r['email']}" for r in EMAIL_RECORDS],
 )
 def test_email_from_csv(row):
-    """Execute data-driven email validation loaded from external CSV resource."""
     email_input = row["email"].strip()
     expected_status = row["expected"].strip().lower()
     expected_valid = expected_status in ("valid", "true", "1")
