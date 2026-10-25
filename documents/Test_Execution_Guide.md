@@ -10,7 +10,6 @@
 
 1. **Activate Virtual Environment:**
    ```powershell
-   # On Windows (PowerShell)
    .\.venv\Scripts\Activate.ps1
    ```
 
@@ -37,13 +36,10 @@
 
 ### 2.1 Parallel Execution (`pytest-xdist`)
 
-To execute test cases in parallel across multiple CPU cores, use the `-n` flag:
+To run test cases in parallel across CPU cores:
 
 ```powershell
-# Run across all available CPU cores automatically:
 pytest -n auto
-
-# Run across 4 parallel worker processes:
 pytest -n 4
 ```
 
@@ -64,26 +60,21 @@ All tests are partitioned into logical suites using markers:
 ### 2.3 Combining Suites and Conditions
 
 ```powershell
-# Run ECP tests in parallel:
 pytest -m ecp -n auto
-
-# Run only IPv4/IPv6 BVA boundary tests:
 pytest -m "ip and bva"
-
-# Run all tests except CSV tests:
 pytest -m "not csv"
 ```
 
 ### 2.4 Test Execution Ordering (`pytest-order`)
 
-The execution order across test suites is strictly established using `@pytest.mark.order`:
+Execution order across test suites is set using `@pytest.mark.order`:
 
-1. **Order 1:** Email Validation Unit Tests (`test_cases/test_email_validation.py`)
-2. **Order 2:** IP Address Validation Unit Tests (`test_cases/test_ip_validation.py`)
+1. **Order 1:** Email Unit Tests (`test_cases/test_email_validation.py`)
+2. **Order 2:** IP Unit Tests (`test_cases/test_ip_validation.py`)
 3. **Order 3:** Email CSV Data-Driven Tests (`test_cases/test_csv_email.py`)
 4. **Order 4:** IP CSV Data-Driven Tests (`test_cases/test_csv_ip.py`)
 
-To run the entire suite in this defined order:
+To run the whole suite in this order:
 ```powershell
 pytest -v
 ```
